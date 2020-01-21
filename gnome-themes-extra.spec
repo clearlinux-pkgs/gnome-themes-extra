@@ -4,7 +4,7 @@
 #
 Name     : gnome-themes-extra
 Version  : 3.28
-Release  : 1
+Release  : 2
 URL      : https://download.gnome.org/sources/gnome-themes-extra/3.28/gnome-themes-extra-3.28.tar.xz
 Source0  : https://download.gnome.org/sources/gnome-themes-extra/3.28/gnome-themes-extra-3.28.tar.xz
 Summary  : No detailed summary available
@@ -14,9 +14,29 @@ Requires: gnome-themes-extra-data = %{version}-%{release}
 Requires: gnome-themes-extra-lib = %{version}-%{release}
 Requires: gnome-themes-extra-license = %{version}-%{release}
 BuildRequires : buildreq-gnome
+BuildRequires : fontconfig-dev
+BuildRequires : gcc-dev32
+BuildRequires : gcc-libgcc32
+BuildRequires : gcc-libstdc++32
 BuildRequires : gettext
+BuildRequires : glibc-dev32
+BuildRequires : glibc-libc32
 BuildRequires : intltool
 BuildRequires : perl(XML::Parser)
+BuildRequires : pkg-config
+BuildRequires : pkgconfig(32atk)
+BuildRequires : pkgconfig(32cairo)
+BuildRequires : pkgconfig(32fontconfig)
+BuildRequires : pkgconfig(32freetype2)
+BuildRequires : pkgconfig(32gdk-2.0)
+BuildRequires : pkgconfig(32gdk-3.0)
+BuildRequires : pkgconfig(32gdk-pixbuf-2.0)
+BuildRequires : pkgconfig(32gio-2.0)
+BuildRequires : pkgconfig(32gtk+-2.0)
+BuildRequires : pkgconfig(32gtk+-3.0)
+BuildRequires : pkgconfig(32harfbuzz)
+BuildRequires : pkgconfig(32librsvg-2.0)
+BuildRequires : pkgconfig(32pangocairo)
 BuildRequires : pkgconfig(cairo)
 BuildRequires : pkgconfig(gdk-2.0)
 BuildRequires : pkgconfig(gdk-3.0)
@@ -24,6 +44,7 @@ BuildRequires : pkgconfig(gdk-pixbuf-2.0)
 BuildRequires : pkgconfig(gio-2.0)
 BuildRequires : pkgconfig(gtk+-2.0)
 BuildRequires : pkgconfig(gtk+-3.0)
+BuildRequires : pkgconfig(harfbuzz)
 BuildRequires : pkgconfig(librsvg-2.0)
 BuildRequires : sed
 
@@ -51,6 +72,16 @@ Requires: gnome-themes-extra-license = %{version}-%{release}
 lib components for the gnome-themes-extra package.
 
 
+%package lib32
+Summary: lib32 components for the gnome-themes-extra package.
+Group: Default
+Requires: gnome-themes-extra-data = %{version}-%{release}
+Requires: gnome-themes-extra-license = %{version}-%{release}
+
+%description lib32
+lib32 components for the gnome-themes-extra package.
+
+
 %package license
 Summary: license components for the gnome-themes-extra package.
 Group: Default
@@ -62,13 +93,16 @@ license components for the gnome-themes-extra package.
 %prep
 %setup -q -n gnome-themes-extra-3.28
 cd %{_builddir}/gnome-themes-extra-3.28
+pushd ..
+cp -a gnome-themes-extra-3.28 build32
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1579639807
+export SOURCE_DATE_EPOCH=1579642719
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -80,18 +114,38 @@ export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static
 make  %{?_smp_mflags}
 
+pushd ../build32/
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
+%configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+make  %{?_smp_mflags}
+popd
 %check
 export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
+cd ../build32;
+make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1579639807
+export SOURCE_DATE_EPOCH=1579642719
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gnome-themes-extra
 cp %{_builddir}/gnome-themes-extra-3.28/LICENSE %{buildroot}/usr/share/package-licenses/gnome-themes-extra/9a1929f4700d2407c70b507b3b2aaf6226a9543c
+pushd ../build32/
+%make_install32
+if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
+then
+pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do ln -s $i 32$i ; done
+popd
+fi
+popd
 %make_install
 
 %files
@@ -3912,6 +3966,10 @@ cp %{_builddir}/gnome-themes-extra-3.28/LICENSE %{buildroot}/usr/share/package-l
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/gtk-2.0/2.10.0/engines/libadwaita.so
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/gtk-2.0/2.10.0/engines/libadwaita.so
 
 %files license
 %defattr(0644,root,root,0755)
