@@ -4,7 +4,7 @@
 #
 Name     : gnome-themes-extra
 Version  : 3.28
-Release  : 2
+Release  : 3
 URL      : https://download.gnome.org/sources/gnome-themes-extra/3.28/gnome-themes-extra-3.28.tar.xz
 Source0  : https://download.gnome.org/sources/gnome-themes-extra/3.28/gnome-themes-extra-3.28.tar.xz
 Summary  : No detailed summary available
@@ -14,7 +14,6 @@ Requires: gnome-themes-extra-data = %{version}-%{release}
 Requires: gnome-themes-extra-lib = %{version}-%{release}
 Requires: gnome-themes-extra-license = %{version}-%{release}
 BuildRequires : buildreq-gnome
-BuildRequires : fontconfig-dev
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
@@ -44,7 +43,6 @@ BuildRequires : pkgconfig(gdk-pixbuf-2.0)
 BuildRequires : pkgconfig(gio-2.0)
 BuildRequires : pkgconfig(gtk+-2.0)
 BuildRequires : pkgconfig(gtk+-3.0)
-BuildRequires : pkgconfig(harfbuzz)
 BuildRequires : pkgconfig(librsvg-2.0)
 BuildRequires : sed
 
@@ -102,14 +100,14 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1579642719
+export SOURCE_DATE_EPOCH=1586231177
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static
 make  %{?_smp_mflags}
@@ -133,7 +131,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1579642719
+export SOURCE_DATE_EPOCH=1586231177
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gnome-themes-extra
 cp %{_builddir}/gnome-themes-extra-3.28/LICENSE %{buildroot}/usr/share/package-licenses/gnome-themes-extra/9a1929f4700d2407c70b507b3b2aaf6226a9543c
