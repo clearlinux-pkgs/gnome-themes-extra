@@ -1,8 +1,2 @@
 # This file contains additional pkgconfig build requirements that did
 # not get picked up automatically. One name per line, no whitespace.
-32atk
-32cairo
-32fontconfig
-32freetype2
-32harfbuzz
-32pangocairo
