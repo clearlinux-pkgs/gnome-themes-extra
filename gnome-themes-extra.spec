@@ -4,7 +4,7 @@
 #
 Name     : gnome-themes-extra
 Version  : 3.28
-Release  : 4
+Release  : 5
 URL      : https://download.gnome.org/sources/gnome-themes-extra/3.28/gnome-themes-extra-3.28.tar.xz
 Source0  : https://download.gnome.org/sources/gnome-themes-extra/3.28/gnome-themes-extra-3.28.tar.xz
 Summary  : No detailed summary available
