@@ -4,7 +4,7 @@
 #
 Name     : gnome-themes-extra
 Version  : 3.28
-Release  : 7
+Release  : 8
 URL      : https://download.gnome.org/sources/gnome-themes-extra/3.28/gnome-themes-extra-3.28.tar.xz
 Source0  : https://download.gnome.org/sources/gnome-themes-extra/3.28/gnome-themes-extra-3.28.tar.xz
 Summary  : No detailed summary available
@@ -17,7 +17,6 @@ BuildRequires : buildreq-gnome
 BuildRequires : gettext
 BuildRequires : intltool
 BuildRequires : perl(XML::Parser)
-BuildRequires : pkg-config
 BuildRequires : pkgconfig(cairo)
 BuildRequires : pkgconfig(gdk-2.0)
 BuildRequires : pkgconfig(gdk-3.0)
@@ -69,15 +68,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1600275514
+export SOURCE_DATE_EPOCH=1664150832
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -89,10 +88,10 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1600275514
+export SOURCE_DATE_EPOCH=1664150832
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gnome-themes-extra
-cp %{_builddir}/gnome-themes-extra-3.28/LICENSE %{buildroot}/usr/share/package-licenses/gnome-themes-extra/9a1929f4700d2407c70b507b3b2aaf6226a9543c
+cp %{_builddir}/gnome-themes-extra-%{version}/LICENSE %{buildroot}/usr/share/package-licenses/gnome-themes-extra/9a1929f4700d2407c70b507b3b2aaf6226a9543c || :
 %make_install
 
 %files
